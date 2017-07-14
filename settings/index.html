@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+  <head>
+    <script type="text/javascript" src="/manager/webserver/assets/js/angular.js"></script>
+    <script>
+      angular.module('blowfishSettings', []).controller('settingsCtrl', [
+        '$scope',
+        function ($scope) {
+
+          Homey.get('bearertoken', function (err, state) {
+            if (state) {
+              $scope.bearertoken = state;
+              console.log(state);
+              $scope.$apply();
+            };
+          });
+          $scope.saveConfig = function () {
+            Homey.set('bearertoken', $scope.bearertoken);
+            $scope.settingssaved = true;
+            console.log('settings saved!');
+          };
+        }
+      ]);
+      function onHomeyReady() {
+        Homey.ready();
+        angular.bootstrap(document, ['blowfishSettings']);
+      }
+    </script>
+  </head>
+
+  <body ng-controller="settingsCtrl" ng-cloak>
+
+    <center><img src="logo.png"/></center>
+
+    <h1 data-i18n="settings.title"></h1>
+
+    <fieldset>
+      <legend>Bearer token</legend>
+      <p data-i18n="settings.intro1">intro1</p>
+      <p>
+        <b data-i18n="settings.keepsafe"></b>
+        <p>
+          <normal data-i18n="settings.explanation1"></normal>
+          <i data-i18n="settings.words.everything"></i>
+          <normal data-i18n="settings.explanation2"></normal>
+          <i data-i18n="settings.words.bearer_token"></i>=
+          <normal data-i18n="settings.explanation3"></normal>
+        </p>
+      </p>
+      <label for="bearertoken" data-i18n="settings.words.bearer_token2">bearer_token2</label>
+      <input id="bearertoken" ng-model="bearertoken" type="text" value="Bearer token">
+      <button ng-click="saveConfig()" data-i18n="settings.words.save">Save</button>
+      <p>
+        <b ng-if="settingssaved">BLUB...BLUB...BLUB..Settings are saved!</b>
+      </p>
+    </fieldset>
+
+  </body>
+
+</html>
